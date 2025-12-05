@@ -1,0 +1,11 @@
+name,company,year,kms_driven,fuel_type,Price
+Maruti Suzuki Swift,Maruti,2019,10000,Petrol,500000
+Hyundai i20,Hyundai,2020,20000,Diesel,600000
+Honda City,Honda,2018,30000,Petrol,700000
+Toyota Innova,Toyota,2017,50000,Diesel,1200000
+Ford EcoSport,Ford,2019,25000,Diesel,800000
+Mahindra Scorpio,Mahindra,2016,60000,Diesel,900000
+Tata Nexon,Tata,2021,15000,Petrol,750000
+Renault Kwid,Renault,2020,10000,Petrol,350000
+Volkswagen Polo,Volkswagen,2018,40000,Petrol,550000
+Chevrolet Beat,Chevrolet,2015,50000,Diesel,250000

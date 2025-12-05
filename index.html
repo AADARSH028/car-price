@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price Predictor</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+    <style>
+        :root {
+            --primary-color: #6C63FF;
+            --secondary-color: #2A2A2A;
+            --accent-color: #00E5FF;
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-color: #ffffff;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            padding: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            background: transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-weight: 600;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        h5 {
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: block;
+            text-align: left;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            height: auto;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.25);
+            color: white;
+        }
+
+        select.form-control {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        select option {
+            background-color: #16213e;
+            color: white;
+        }
+
+        .btn-predict {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            border: none;
+            border-radius: 10px;
+            padding: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            width: 100%;
+            margin-top: 1rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-predict:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
+            color: white;
+        }
+
+        .prediction-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid var(--accent-color);
+            text-align: center;
+            display: none;
+            /* Hidden by default */
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .prediction-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .glass-card {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h1><i class="fas fa-car-side mr-2"></i>Car Price Predictor</h1>
+                    </div>
+                    <div class="card-body">
+                        <h5>Predict the fair market value of your car instantly.</h5>
+
+                        <form method="post" accept-charset="utf-8" name="Modelform" id="predictionForm">
+                            <div class="form-group">
+                                <label><i class="fas fa-building mr-2"></i>Company</label>
+                                <select class="form-control" id="company" name="company" required
+                                    onchange="load_car_models(this.id,'car_models')">
+                                    {% for company in companies %}
+                                    <option value="{{ company }}">{{ company }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-car mr-2"></i>Model</label>
+                                <select class="form-control" id="car_models" name="car_models" required>
+                                    <option value="" disabled selected>Select Company First</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-calendar-alt mr-2"></i>Year of Purchase</label>
+                                <select class="form-control" id="year" name="year" required>
+                                    {% for year in years %}
+                                    <option value="{{ year }}">{{ year }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-gas-pump mr-2"></i>Fuel Type</label>
+                                <select class="form-control" id="fuel_type" name="fuel_type" required>
+                                    {% for fuel in fuel_types %}
+                                    <option value="{{ fuel }}">{{ fuel }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-tachometer-alt mr-2"></i>Kilometers Driven</label>
+                                <input type="number" class="form-control" id="kilo_driven" name="kilo_driven"
+                                    placeholder="e.g. 50000" required>
+                            </div>
+
+                            <button type="button" class="btn btn-primary btn-predict" onclick="send_data()">
+                                <i class="fas fa-calculator mr-2"></i>Predict Price
+                            </button>
+                        </form>
+
+                        <div class="prediction-result" id="prediction-result">
+                            <span class="prediction-text" id="prediction"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function load_car_models(company_id, car_model_id) {
+            var company = document.getElementById(company_id);
+            var car_model = document.getElementById(car_model_id);
+
+            car_model.value = "";
+            car_model.innerHTML = "";
+
+            // Add default option
+            var defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.innerHTML = "Select Model";
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            car_model.options.add(defaultOption);
+
+            {% for company in companies %}
+            if (company.value == "{{ company }}") {
+                {% for model in car_models %}
+                {% if company in model %}
+                var newOption = document.createElement("option");
+                newOption.value = "{{ model }}";
+                newOption.innerHTML = "{{ model }}";
+                car_model.options.add(newOption);
+                {% endif %}
+                {% endfor %}
+            }
+            {% endfor %}
+        }
+
+        function form_handler(event) {
+            event.preventDefault();
+        }
+
+        function send_data() {
+            var form = document.querySelector('form');
+
+            // Basic validation
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            form.addEventListener("submit", form_handler);
+
+            var fd = new FormData(form);
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('POST', '/predict', true);
+
+            var resultDiv = document.getElementById('prediction-result');
+            var predictionSpan = document.getElementById('prediction');
+
+            resultDiv.style.display = 'block';
+            predictionSpan.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Calculating...';
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    predictionSpan.innerHTML = "Estimated Price: ₹" + xhr.responseText;
+                }
+            };
+
+            xhr.onload = function () { };
+            xhr.send(fd);
+        }
+    </script>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+
+</html>
